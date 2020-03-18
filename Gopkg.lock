@@ -2,6 +2,19 @@
 
 
 [[projects]]
+  digest = "1:8b36a2a5ed2e66e577c35f9b0f770b4653977a025a59088ba4fd2fbbaa948382"
+  name = "github.com/DavidBelicza/TextRank"
+  packages = [
+    ".",
+    "convert",
+    "parse",
+    "rank",
+  ]
+  pruneopts = "UT"
+  revision = "79e14bab980af3a1c9f4f5b73672ae1ef18ab732"
+  version = "v2.1.1"
+
+[[projects]]
   digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
@@ -28,6 +41,9 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = ["github.com/spf13/cobra"]
+  input-imports = [
+    "github.com/DavidBelicza/TextRank",
+    "github.com/spf13/cobra",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
