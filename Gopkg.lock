@@ -23,6 +23,38 @@
   version = "v1.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:e375206f7b0f3113ef47fa5215b7193455a62273d39dd5e5a89d8cb4b4bc2666"
+  name = "github.com/jaytaylor/html2text"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "61d9dc4d719557facf8e9f7ac2e1e215d2167462"
+
+[[projects]]
+  digest = "1:eb1bffab7260bf5ddc95fc2c41d4bfee1a4f5fe18194b3946fe8a9e9121a282f"
+  name = "github.com/mattn/go-runewidth"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "a4df4ddbff020e131056d91f580a1cdcd806e3ae"
+  version = "v0.0.8"
+
+[[projects]]
+  branch = "master"
+  digest = "1:2a46ee21e9d7b238e4dfc53d573a48d9a1e5bb18843a2f455320a5f80b7d93e5"
+  name = "github.com/mkhoi1998/Stack-on-Go"
+  packages = ["stackongo"]
+  pruneopts = "UT"
+  revision = "1f3663f2ffc98f3f4d8f4b851aad4c1c9d0fed53"
+
+[[projects]]
+  digest = "1:b8261a46d75566ebf5b4fb6bb762f54f47e6633e0995118393afc80bb1f428f5"
+  name = "github.com/olekukonko/tablewriter"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "876dd0e0227ec99c0243b639b92139915b65331a"
+  version = "v0.0.4"
+
+[[projects]]
   digest = "1:6a13467c76490975b05609344b3d882a9185fd11a44a04ede7427d684e0819b9"
   name = "github.com/spf13/cobra"
   packages = ["."]
@@ -38,11 +70,32 @@
   revision = "2e9d26c8c37aae03e3f9d4e90b7116f5accb7cab"
   version = "v1.0.5"
 
+[[projects]]
+  branch = "master"
+  digest = "1:362b269942e8508aed33025593090ad4cdbd9077de4b1cd505e6124728e9e856"
+  name = "github.com/ssor/bom"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "6386211fdfcf24c0bfbdaceafd02849ed9a8a509"
+
+[[projects]]
+  branch = "master"
+  digest = "1:ca901dc31bf65bcdf4ceb1b9b83292ea7b71bf9e4e22a807093900c737e1d960"
+  name = "golang.org/x/net"
+  packages = [
+    "html",
+    "html/atom",
+  ]
+  pruneopts = "UT"
+  revision = "244492dfa37ae2ce87222fd06250a03160745faa"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/DavidBelicza/TextRank",
+    "github.com/jaytaylor/html2text",
+    "github.com/mkhoi1998/Stack-on-Go/stackongo",
     "github.com/spf13/cobra",
   ]
   solver-name = "gps-cdcl"

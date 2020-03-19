@@ -26,6 +26,18 @@
 
 
 [[constraint]]
+  name = "github.com/DavidBelicza/TextRank"
+  version = "2.1.1"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/jaytaylor/html2text"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/mkhoi1998/Stack-on-Go"
+
+[[constraint]]
   name = "github.com/spf13/cobra"
   version = "0.0.6"
 

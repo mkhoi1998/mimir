@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mkhoi1998/devsup/cmd/quick"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +13,7 @@ var rootCmd = &cobra.Command{
 	Args:                  cobra.MinimumNArgs(0),
 	DisableFlagsInUseLine: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		ans := quick.QuickChat(args)
+		ans := ResponseHandler(args)
 		fmt.Println(ans)
 	},
 }
