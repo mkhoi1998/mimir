@@ -1,6 +1,8 @@
 package stackoverflow
 
 import (
+	"fmt"
+
 	"github.com/mkhoi1998/Stack-on-Go/stackongo"
 )
 
@@ -42,11 +44,25 @@ func GetAnswerFromSearch(query []string) string {
 	if err != nil {
 		return ""
 	}
-	if len(items.Items) != 0 && items.Items[0].Score > 10 && items.Items[0].Accepted_answer_id != 0 {
+	if len(items.Items) != 0 && items.Items[0].Score > 10 {
+		if items.Items[0].Accepted_answer_id != 0 {
+			params = make(stackongo.Params)
+			params.Add("filter", "!9Z(-wzu0T")
+			ans, err := session.GetAnswers([]int{items.Items[0].Accepted_answer_id}, params)
+			if err != nil {
+				return ""
+			}
+			if len(ans.Items) != 0 {
+				return ans.Items[0].Body
+			}
+		}
+
 		params = make(stackongo.Params)
 		params.Add("filter", "!9Z(-wzu0T")
-		ans, err := session.GetAnswers([]int{items.Items[0].Accepted_answer_id}, params)
+		params.Sort("votes")
+		ans, err := session.AnswersForQuestions([]int{items.Items[0].Question_id}, params)
 		if err != nil {
+			fmt.Println(err.Error())
 			return ""
 		}
 		if len(ans.Items) != 0 {
