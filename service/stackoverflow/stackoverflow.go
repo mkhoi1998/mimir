@@ -41,7 +41,7 @@ func GetWikiFromTag(tag string) string {
 	return ""
 }
 
-// GetAnswerFromSearch from question with > 10 votes and accepted or highest-vote answer
+// GetAnswerFromSearch from question with > 99 votes and accepted or highest-vote answer
 func GetAnswerFromSearch(query []string) string {
 	session := stackongo.NewSession("stackoverflow")
 
@@ -52,7 +52,7 @@ func GetAnswerFromSearch(query []string) string {
 		return ""
 	}
 
-	if len(items.Items) != 0 && items.Items[0].Score > 10 {
+	if len(items.Items) != 0 && items.Items[0].Score > 99 {
 		if items.Items[0].Accepted_answer_id != 0 {
 			params = make(stackongo.Params)
 			params.Add("filter", consts.StackOverflowAnswerBodyFilter)
