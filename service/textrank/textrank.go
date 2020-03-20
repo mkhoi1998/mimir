@@ -17,6 +17,7 @@ func ExtractKeywords(text string) []string {
 	tr.Ranking(algorithmDef)
 
 	w := textrank.FindSingleWords(tr)
+	
 	var res []string
 	for i := range w {
 		res = append(res, w[i].Word)
