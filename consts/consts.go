@@ -1,7 +1,10 @@
 package consts
 
 var (
-	// Greetings
+	StackOverflowWikiBodyFilter   = "!--fGggaXKPAj"
+	StackOverflowAnswerBodyFilter = "!9Z(-wzu0T"
+
+	// Greetings store scripts for greeting
 	Greetings = []string{
 		"Hello world!",
 		"Hello world! How can I help you?",
@@ -11,5 +14,16 @@ var (
 		"How can I help you?",
 		"How is your code?",
 		"How is your code doing?",
+	}
+
+	// Helps store scripts for providing helps
+	Helps = []string{
+		"Hope this helps!",
+	}
+
+	// ErrInternal store scripts for response errors
+	ErrInternal = []string{
+		"My mind is not responding...",
+		"I cannot proceed.",
 	}
 )

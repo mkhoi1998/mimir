@@ -21,6 +21,7 @@ var rootCmd = &cobra.Command{
 func init() {
 }
 
+// Execute the commands
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
