@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/jaytaylor/html2text"
+
 	"github.com/mkhoi1998/devsup/errorer"
 )
 

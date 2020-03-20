@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mkhoi1998/Stack-on-Go/stackongo"
+
 	"github.com/mkhoi1998/devsup/consts"
 )
 
@@ -73,7 +74,7 @@ func GetAnswerFromSearch(query []string) string {
 			fmt.Println(err.Error())
 			return ""
 		}
-		
+
 		if len(ans.Items) != 0 {
 			return ans.Items[0].Body
 		}
