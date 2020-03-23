@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -70,6 +71,24 @@ func searchStackOverflow(keywords []string) string {
 }
 
 func parseContent(link string) string {
+	if strings.Contains(link, "stackoverflow.com") {
+		s := strings.Split(link, "/")
+
+		id, err := strconv.Atoi(s[4])
+		if err != nil {
+			return errorer.ErrInternal.Error()
+		}
+		ans := stackoverflow.GetAnswerFromQuestionID(id)
+		ans, err = html2text.FromString(ans)
+		if err != nil {
+			return errorer.ErrInternal.Error()
+		}
+		if len(strings.Split(ans, "\n\n")) < 20 {
+			return ans
+		}
+		res := strings.Join(textrank.ExtractSentences(ans, 1), "")
+		return strings.ReplaceAll(res, "*", "")
+	}
 	content := google.GetContent(link)
 	if len(strings.Split(content, "\n\n")) < 17 && !strings.Contains(strings.ToLower(content), "captcha") {
 		header := regexp.MustCompile(`(\*\*+)|(--+)`)
