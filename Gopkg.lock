@@ -15,6 +15,14 @@
   version = "v2.1.1"
 
 [[projects]]
+  digest = "1:f3219f0bd04a06669b20e96095feb0c6317c890cae1f1dadf83d94caab65c949"
+  name = "github.com/ekzhu/go-fasttext"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "077ab681207fdf88107837e6571880d3881341ed"
+  version = "v1.0"
+
+[[projects]]
   digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
@@ -37,6 +45,14 @@
   pruneopts = "UT"
   revision = "a4df4ddbff020e131056d91f580a1cdcd806e3ae"
   version = "v0.0.8"
+
+[[projects]]
+  digest = "1:e2ac6e4ee843b2001b6c3a7801180ea3f7fa6d61fb917ca7dde15e26ef02a082"
+  name = "github.com/mattn/go-sqlite3"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "9bdaffc12bf8be15afceb51bb60851edd4afdff5"
+  version = "v2.0.3"
 
 [[projects]]
   branch = "master"
@@ -94,7 +110,9 @@
   analyzer-version = 1
   input-imports = [
     "github.com/DavidBelicza/TextRank",
+    "github.com/ekzhu/go-fasttext",
     "github.com/jaytaylor/html2text",
+    "github.com/mattn/go-sqlite3",
     "github.com/mkhoi1998/Stack-on-Go/stackongo",
     "github.com/spf13/cobra",
   ]

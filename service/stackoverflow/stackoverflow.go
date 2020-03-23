@@ -1,8 +1,6 @@
 package stackoverflow
 
 import (
-	"fmt"
-
 	"github.com/mkhoi1998/Stack-on-Go/stackongo"
 
 	"github.com/mkhoi1998/devsup/consts"
@@ -66,18 +64,25 @@ func GetAnswerFromSearch(query []string) string {
 			}
 		}
 
-		params = make(stackongo.Params)
-		params.Add("filter", consts.StackOverflowAnswerBodyFilter)
-		params.Sort("votes")
-		ans, err := session.AnswersForQuestions([]int{items.Items[0].Question_id}, params)
-		if err != nil {
-			fmt.Println(err.Error())
-			return ""
-		}
+		return GetAnswerFromQuestionID(items.Items[0].Question_id)
+	}
+	return ""
+}
 
-		if len(ans.Items) != 0 {
-			return ans.Items[0].Body
-		}
+// GetAnswerFromQuestionID return most voted answer from question id
+func GetAnswerFromQuestionID(id int) string {
+	session := stackongo.NewSession("stackoverflow")
+
+	params := make(stackongo.Params)
+	params.Add("filter", consts.StackOverflowAnswerBodyFilter)
+	params.Sort("votes")
+	ans, err := session.AnswersForQuestions([]int{id}, params)
+	if err != nil {
+		return ""
+	}
+
+	if len(ans.Items) != 0 {
+		return ans.Items[0].Body
 	}
 	return ""
 }
