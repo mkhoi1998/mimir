@@ -15,14 +15,6 @@
   version = "v2.1.1"
 
 [[projects]]
-  digest = "1:f3219f0bd04a06669b20e96095feb0c6317c890cae1f1dadf83d94caab65c949"
-  name = "github.com/ekzhu/go-fasttext"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "077ab681207fdf88107837e6571880d3881341ed"
-  version = "v1.0"
-
-[[projects]]
   digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
@@ -47,14 +39,6 @@
   version = "v0.0.8"
 
 [[projects]]
-  digest = "1:e2ac6e4ee843b2001b6c3a7801180ea3f7fa6d61fb917ca7dde15e26ef02a082"
-  name = "github.com/mattn/go-sqlite3"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "9bdaffc12bf8be15afceb51bb60851edd4afdff5"
-  version = "v2.0.3"
-
-[[projects]]
   branch = "master"
   digest = "1:2a46ee21e9d7b238e4dfc53d573a48d9a1e5bb18843a2f455320a5f80b7d93e5"
   name = "github.com/mkhoi1998/Stack-on-Go"
@@ -69,6 +53,14 @@
   pruneopts = "UT"
   revision = "876dd0e0227ec99c0243b639b92139915b65331a"
   version = "v0.0.4"
+
+[[projects]]
+  digest = "1:56ce664abce576b1e6e3673303a5eef8ef57d3f261c2d658f6f0313ecb17ac1f"
+  name = "github.com/sahilm/fuzzy"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "0ca8ec0fccc8cd7d336a6d6dec490a327a8d5cb0"
+  version = "v0.1.0"
 
 [[projects]]
   digest = "1:6a13467c76490975b05609344b3d882a9185fd11a44a04ede7427d684e0819b9"
@@ -96,6 +88,31 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:76be532c9e0a02ab54fb2b01a9ca7971bb89f5739a50ecf5654b77abe60d8a64"
+  name = "github.com/wilcosheh/tfidf"
+  packages = [
+    ".",
+    "seg",
+    "util",
+  ]
+  pruneopts = "UT"
+  revision = "2847b6a5524e45e742dabb5eee12354729dff0d5"
+
+[[projects]]
+  digest = "1:e1e3f9055b9815694c65a6281351885e061dc03585ffd5879e9f5b029f46924d"
+  name = "github.com/yanyiwu/gojieba"
+  packages = [
+    ".",
+    "deps/cppjieba",
+    "deps/limonp",
+    "dict",
+  ]
+  pruneopts = "UT"
+  revision = "86e446422411bf948bd92f6a13f6858a30810adf"
+  version = "v1.1.2"
+
+[[projects]]
+  branch = "master"
   digest = "1:ca901dc31bf65bcdf4ceb1b9b83292ea7b71bf9e4e22a807093900c737e1d960"
   name = "golang.org/x/net"
   packages = [
@@ -110,11 +127,12 @@
   analyzer-version = 1
   input-imports = [
     "github.com/DavidBelicza/TextRank",
-    "github.com/ekzhu/go-fasttext",
     "github.com/jaytaylor/html2text",
-    "github.com/mattn/go-sqlite3",
     "github.com/mkhoi1998/Stack-on-Go/stackongo",
+    "github.com/sahilm/fuzzy",
     "github.com/spf13/cobra",
+    "github.com/wilcosheh/tfidf",
+    "golang.org/x/net/html",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
