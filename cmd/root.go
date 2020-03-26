@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -13,18 +12,14 @@ var rootCmd = &cobra.Command{
 	Args:                  cobra.MinimumNArgs(0),
 	DisableFlagsInUseLine: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		ans := ResponseHandler(args)
-		fmt.Println(ans)
+		fmt.Println(ResponseHandler(args))
 	},
 }
 
-func init() {
-}
+// func init() {
+// }
 
 // Execute the commands
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	rootCmd.Execute()
 }

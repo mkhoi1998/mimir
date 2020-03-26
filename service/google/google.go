@@ -2,14 +2,14 @@ package google
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
 
 	"github.com/jaytaylor/html2text"
-
-	"github.com/mkhoi1998/devsup/errorer"
+	"github.com/mkhoi1998/devsup/utils"
 )
 
 // SearchGoogle get the first link from google search using queries
@@ -17,26 +17,15 @@ func SearchGoogle(query []string) string {
 	u := fmt.Sprintf("https://www.google.com/search?q=%v", url.QueryEscape(strings.Join(query, " ")))
 	r, err := http.Get(u)
 	if err != nil {
-		return errorer.ErrInternal.Error()
+		return ""
 	}
 
 	t, err := html2text.FromReader(r.Body)
 	if err != nil {
-		return errorer.ErrInternal.Error()
+		return ""
 	}
 
-	header := regexp.MustCompile(`\*\*+`)
-	ts := header.Split(t, -1)
-
-	var index int
-	var last int
-	for i := range ts {
-		if len(ts[i]) > last {
-			index = i
-			last = len(ts[i])
-		}
-	}
-	rawText := strings.ReplaceAll(ts[index], "~", ".")
+	rawText := strings.ReplaceAll(utils.ExtractLongestBody(`\*\*+`, t), "~", ".")
 
 	urlReg := regexp.MustCompile(`q=https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`)
 	matches := urlReg.FindAllString(rawText, -1)
@@ -50,7 +39,7 @@ func SearchGoogle(query []string) string {
 	}
 	res, err = url.QueryUnescape(strings.Split(res, "&sa=")[0])
 	if err != nil {
-		return errorer.ErrInternal.Error()
+		return ""
 	}
 
 	return strings.TrimPrefix(res, "q=")
@@ -60,11 +49,19 @@ func SearchGoogle(query []string) string {
 func GetContent(link string) string {
 	r, err := http.Get(link)
 	if err != nil {
-		return errorer.ErrInternal.Error()
+		return ""
 	}
-	t, err := html2text.FromReader(r.Body)
+	bodyBytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		return errorer.ErrInternal.Error()
+		return ""
+	}
+	b := string(bodyBytes)
+	if strings.Contains(b, "<code>") {
+		return b
+	}
+	t, err := html2text.FromString(b)
+	if err != nil {
+		return ""
 	}
 
 	return t
