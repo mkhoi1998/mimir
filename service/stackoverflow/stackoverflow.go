@@ -11,6 +11,7 @@ func CheckTagFromKeyword(kw string) (string, bool) {
 	session := stackongo.NewSession("stackoverflow")
 
 	params := make(stackongo.Params)
+	params.Add("key", consts.StackOverflowKey)
 	tag, err := session.TagInfo([]string{kw}, params)
 	if err != nil {
 		return kw, false
@@ -27,6 +28,7 @@ func GetWikiFromTag(tag string) string {
 	session := stackongo.NewSession("stackoverflow")
 
 	params := make(stackongo.Params)
+	params.Add("key", consts.StackOverflowKey)
 	params.Add("filter", consts.StackOverflowWikiBodyFilter)
 	wiki, err := session.WikisForTags([]string{tag}, params)
 	if err != nil {
@@ -44,6 +46,7 @@ func GetAnswerFromSearch(query []string) string {
 	session := stackongo.NewSession("stackoverflow")
 
 	params := make(stackongo.Params)
+	params.Add("key", consts.StackOverflowKey)
 	params.Sort("relevance")
 	items, err := session.AdvancedSearch(query, params)
 	if err != nil {
@@ -53,6 +56,7 @@ func GetAnswerFromSearch(query []string) string {
 	if len(items.Items) != 0 && items.Items[0].Score > 99 {
 		if items.Items[0].Accepted_answer_id != 0 {
 			params = make(stackongo.Params)
+			params.Add("key", consts.StackOverflowKey)
 			params.Add("filter", consts.StackOverflowAnswerBodyFilter)
 			ans, err := session.GetAnswers([]int{items.Items[0].Accepted_answer_id}, params)
 			if err != nil {
@@ -74,6 +78,7 @@ func GetAnswerFromQuestionID(id int) string {
 	session := stackongo.NewSession("stackoverflow")
 
 	params := make(stackongo.Params)
+	params.Add("key", consts.StackOverflowKey)
 	params.Add("filter", consts.StackOverflowAnswerBodyFilter)
 	params.Sort("votes")
 	ans, err := session.AnswersForQuestions([]int{id}, params)

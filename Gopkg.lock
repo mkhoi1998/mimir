@@ -15,6 +15,14 @@
   version = "v2.1.1"
 
 [[projects]]
+  branch = "master"
+  digest = "1:42ecbfed0886833d3ef756c5e2b4971d5b14d7191b9f9d4baa4ab41231cfb3e7"
+  name = "github.com/agonopol/go-stem"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "98588501825042276ca6d7cbc73bc8bb56ea8d77"
+
+[[projects]]
   digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
@@ -127,6 +135,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/DavidBelicza/TextRank",
+    "github.com/agonopol/go-stem",
     "github.com/jaytaylor/html2text",
     "github.com/mkhoi1998/Stack-on-Go/stackongo",
     "github.com/sahilm/fuzzy",

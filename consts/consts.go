@@ -1,8 +1,10 @@
 package consts
 
 var (
+	// StackOverflow stuff
 	StackOverflowWikiBodyFilter   = "!--fGggaXKPAj"
 	StackOverflowAnswerBodyFilter = "!9Z(-wzu0T"
+	StackOverflowKey              = "U4DMV*8nvpm3EOpvf69Rxw(("
 
 	// Greetings store scripts for greeting
 	Greetings = []string{
