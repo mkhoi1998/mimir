@@ -11,6 +11,7 @@ import (
 	"golang.org/x/net/html"
 )
 
+// ExtractTag return the content of the provided html tag
 func ExtractTag(doc *html.Node, tag string) ([]string, error) {
 	var code []string
 	var crawler func(*html.Node)
@@ -42,6 +43,7 @@ func renderNode(n *html.Node, tag string) string {
 	return strings.ReplaceAll(strings.ReplaceAll(buf.String(), fmt.Sprintf("<%v>", tag), ""), fmt.Sprintf("</%v>", tag), "")
 }
 
+// ExtractLongestBody return the longest body of the html
 func ExtractLongestBody(regex, content string) string {
 	header := regexp.MustCompile(regex)
 	ts := header.Split(content, -1)
@@ -57,6 +59,7 @@ func ExtractLongestBody(regex, content string) string {
 	return ts[index]
 }
 
+// ExtractHeaders return the headers of the html
 func ExtractHeaders(regex, content string) []string {
 	headers := regexp.MustCompile(regex)
 	s := headers.FindAllStringSubmatch(content, -1)
@@ -67,6 +70,7 @@ func ExtractHeaders(regex, content string) []string {
 	return res
 }
 
+// ExtractBody return the bodies of the html
 func ExtractBody(regex, content string) []string {
 	header := regexp.MustCompile(regex)
 	return header.Split(content, -1)

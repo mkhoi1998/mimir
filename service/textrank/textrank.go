@@ -7,6 +7,7 @@ import (
 	textrank "github.com/DavidBelicza/TextRank"
 )
 
+// ExtractKeywords return the keywords from text
 func ExtractKeywords(text string) []string {
 	tr := textrank.NewTextRank()
 	rule := textrank.NewDefaultRule()
@@ -25,6 +26,7 @@ func ExtractKeywords(text string) []string {
 	return res
 }
 
+// ExtractSentences return the most important sentences of text
 func ExtractSentences(text string, count int) []string {
 	r := regexp.MustCompile(`([a-z0-9])(\.[a-z0-9])+`)
 	rep := r.FindAllString(text, -1)
