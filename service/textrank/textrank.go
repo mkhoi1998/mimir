@@ -18,7 +18,7 @@ func ExtractKeywords(text string) []string {
 	tr.Ranking(algorithmDef)
 
 	w := textrank.FindSingleWords(tr)
-	
+
 	var res []string
 	for i := range w {
 		res = append(res, w[i].Word)
@@ -28,7 +28,7 @@ func ExtractKeywords(text string) []string {
 
 // ExtractSentences return the most important sentences of text
 func ExtractSentences(text string, count int) []string {
-	r := regexp.MustCompile(`([a-z0-9])(\.[a-z0-9])+`)
+	r := regexp.MustCompile(`([a-z0-9])(\.[a-z0-9])+|\.\.+`)
 	rep := r.FindAllString(text, -1)
 	for i := range rep {
 		temp := strings.ReplaceAll(rep[i], ".", "~")

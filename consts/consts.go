@@ -3,7 +3,7 @@ package consts
 var (
 	// StackOverflow stuff
 	StackOverflowWikiBodyFilter   = "!--fGggaXKPAj"
-	StackOverflowAnswerBodyFilter = "!9Z(-wzu0T"
+	StackOverflowAnswerBodyFilter = "!-*jbN.9m(dML"
 	StackOverflowKey              = "U4DMV*8nvpm3EOpvf69Rxw(("
 
 	// Greetings store scripts for greeting

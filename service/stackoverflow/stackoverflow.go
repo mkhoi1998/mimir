@@ -41,8 +41,8 @@ func GetWikiFromTag(tag string) string {
 	return ""
 }
 
-// GetAnswerFromSearch from question with > 99 votes and accepted or highest-vote answer
-func GetAnswerFromSearch(query []string) string {
+// GetAnswerFromSearch from question with > 99 votes and accepted or highest-vote answer and the link
+func GetAnswerFromSearch(query []string) (string, string) {
 	session := stackongo.NewSession("stackoverflow")
 
 	params := make(stackongo.Params)
@@ -50,7 +50,7 @@ func GetAnswerFromSearch(query []string) string {
 	params.Sort("relevance")
 	items, err := session.AdvancedSearch(query, params)
 	if err != nil {
-		return ""
+		return "", ""
 	}
 
 	if len(items.Items) != 0 && items.Items[0].Score > 99 {
@@ -60,21 +60,21 @@ func GetAnswerFromSearch(query []string) string {
 			params.Add("filter", consts.StackOverflowAnswerBodyFilter)
 			ans, err := session.GetAnswers([]int{items.Items[0].Accepted_answer_id}, params)
 			if err != nil {
-				return ""
+				return "", ""
 			}
 
 			if len(ans.Items) != 0 {
-				return ans.Items[0].Body
+				return ans.Items[0].Body, ans.Items[0].Link
 			}
 		}
 
 		return GetAnswerFromQuestionID(items.Items[0].Question_id)
 	}
-	return ""
+	return "", ""
 }
 
-// GetAnswerFromQuestionID return most voted answer from question id
-func GetAnswerFromQuestionID(id int) string {
+// GetAnswerFromQuestionID return most voted answer from question id and the link
+func GetAnswerFromQuestionID(id int) (string, string) {
 	session := stackongo.NewSession("stackoverflow")
 
 	params := make(stackongo.Params)
@@ -83,11 +83,11 @@ func GetAnswerFromQuestionID(id int) string {
 	params.Sort("votes")
 	ans, err := session.AnswersForQuestions([]int{id}, params)
 	if err != nil {
-		return ""
+		return "", ""
 	}
 
 	if len(ans.Items) != 0 {
-		return ans.Items[0].Body
+		return ans.Items[0].Body, ans.Items[0].Link
 	}
-	return ""
+	return "", ""
 }

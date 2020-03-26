@@ -109,11 +109,11 @@ func tagStackOverflow(keyword string) string {
 }
 
 func searchStackOverflow(keywords []string) string {
-	ans := stackoverflow.GetAnswerFromSearch(keywords)
+	ans, link := stackoverflow.GetAnswerFromSearch(keywords)
 	if ans == "" {
 		return ans
 	}
-	return extractContent(ans, true)
+	return extractContent(ans, link)
 }
 
 func parseContent(link string) string {
@@ -124,17 +124,17 @@ func parseContent(link string) string {
 			return errorer.ErrInternal.Error()
 		}
 
-		ans := stackoverflow.GetAnswerFromQuestionID(id)
+		ans, _ := stackoverflow.GetAnswerFromQuestionID(id)
 		if ans == "" {
 			return fmt.Sprintf("%v\n%v", link, consts.Helps[rand.Intn(len(consts.Helps))])
 		}
-		return extractContent(ans, true)
+		return extractContent(ans, link)
 	}
 
 	content := google.GetContent(link)
 	if len(strings.Split(content, "\n\n")) < 17 {
 		if strings.Contains(content, "<code>") {
-			c := extractContent(content, false)
+			c := extractContent(content, "")
 			if c == "" {
 				rand.Seed(time.Now().Unix())
 				return fmt.Sprintf("%v\n%v", link, consts.Helps[rand.Intn(len(consts.Helps))])
@@ -149,7 +149,8 @@ func parseContent(link string) string {
 	return fmt.Sprintf("%v\n%v", link, consts.Helps[rand.Intn(len(consts.Helps))])
 }
 
-func extractContent(content string, isSt bool) string {
+func extractContent(content string, link string) string {
+	isSt := link != ""
 	if isSt {
 		content = strings.Split(content, "<hr")[0]
 	}
@@ -163,16 +164,22 @@ func extractContent(content string, isSt bool) string {
 		if err != nil {
 			return errorer.ErrInternal.Error()
 		}
+		res = strings.TrimSpace(strings.ReplaceAll(res, "\n>", ""))
+		if len(strings.Split(res, "\n\n")) > 5 {
+			rand.Seed(time.Now().Unix())
+			return fmt.Sprintf("%v\n%v", link, consts.Helps[rand.Intn(len(consts.Helps))])
+		}
 		return res
 	}
 	extracted := tfidf.GetMostImportant(codes, isSt)
 	if extracted == nil {
 		return ""
 	}
-	return parseResponseByCode(extracted, content, isSt)
+	return parseResponseByCode(extracted, content, link)
 }
 
-func parseResponseByCode(codes []string, ans string, isSt bool) string {
+func parseResponseByCode(codes []string, ans string, link string) string {
+	isSt := link != ""
 	ans = html.UnescapeString(ans)
 	var parts []string
 	if isSt {
@@ -215,5 +222,5 @@ func parseResponseByCode(codes []string, ans string, isSt bool) string {
 			}
 		}
 	}
-	return strings.Join(codes, "\n\n")
+	return fmt.Sprintf("%v\n%v", strings.Join(codes, "\n\n"), link)
 }
