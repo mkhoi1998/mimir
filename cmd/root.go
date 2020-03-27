@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+
+	"github.com/mkhoi1998/devsup/cmd/answer"
+	"github.com/mkhoi1998/devsup/cmd/chat"
 )
 
 var rootCmd = &cobra.Command{
@@ -12,12 +13,23 @@ var rootCmd = &cobra.Command{
 	Args:                  cobra.MinimumNArgs(0),
 	DisableFlagsInUseLine: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(ResponseHandler(args))
+		answer.Handler(args)
 	},
 }
 
-// func init() {
-// }
+var chatCmd = &cobra.Command{
+	Use:                   "chat",
+	Long:                  `Chat with me!`,
+	Args:                  cobra.MinimumNArgs(0),
+	DisableFlagsInUseLine: true,
+	Run: func(cmd *cobra.Command, args []string) {
+		chat.Handler(args)
+	},
+}
+
+func init() {
+	rootCmd.AddCommand(chatCmd)
+}
 
 // Execute the commands
 func Execute() {

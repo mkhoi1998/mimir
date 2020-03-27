@@ -1,5 +1,11 @@
 package consts
 
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
 var (
 	// StackOverflow stuff
 	StackOverflowWikiBodyFilter   = "!--fGggaXKPAj"
@@ -29,3 +35,8 @@ var (
 		"I cannot proceed.",
 	}
 )
+
+func ParseLink(link string) string {
+	rand.Seed(time.Now().Unix())
+	return fmt.Sprintf("%v\n%v", link, Helps[rand.Intn(len(Helps))])
+}

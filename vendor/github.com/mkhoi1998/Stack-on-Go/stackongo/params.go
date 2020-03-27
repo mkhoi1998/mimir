@@ -13,7 +13,7 @@ func (p Params) Add(key string, value interface{}) {
 	p[key] = fmt.Sprintf("%v", value)
 }
 
-// Set change the value of the given param 
+// Set change the value of the given param
 func (p Params) Set(key string, value interface{}) {
 	p.Add(key, value)
 }
@@ -33,38 +33,48 @@ func (p Params) Pagesize(num int) {
 	p.Add("pagesize", num)
 }
 
-// Fromdate sets fromdate parameter from the given *Time reference 
+// Fromdate sets fromdate parameter from the given *Time reference
 func (p Params) Fromdate(date time.Time) {
 	p.Add("fromdate", date.Unix())
 }
 
-// Todate sets todate parameter from the given *Time reference 
+// Todate sets todate parameter from the given *Time reference
 func (p Params) Todate(date time.Time) {
 	p.Add("todate", date.Unix())
 }
 
-// Sort sets the field to sort results 
+// Sort sets the field to sort results
 func (p Params) Sort(field string) {
 	p.Add("sort", field)
 }
 
-// Order sets order to sort results 
+// Order sets order to sort results
 func (p Params) Order(order string) {
 	p.Add("order", order)
 }
 
-// Min sets the minimum value the field can take 
+// Min sets the minimum value the field can take
 func (p Params) Min(num int) {
 	p.Add("min", num)
 }
 
-// Max sets the maximum value the field can take 
+// Max sets the maximum value the field can take
 func (p Params) Max(num int) {
 	p.Add("max", num)
 }
 
-// AddVectorized adds a new parameter 
+// AddVectorized adds a new parameter
 // using the given key and vectorized value (eg. tagged=ruby;java;go)
 func (p Params) AddVectorized(key string, values []string) {
 	p[key] = strings.Join(values, ";")
+}
+
+// Key sets the key for querying
+func (p Params) Key(key string) {
+	p.Add("key", key)
+}
+
+// Filter sets the filter code for querying
+func (p Params) Filter(code string) {
+	p.Add("filter", code)
 }

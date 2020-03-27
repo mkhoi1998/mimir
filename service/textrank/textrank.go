@@ -9,13 +9,7 @@ import (
 
 // ExtractKeywords return the keywords from text
 func ExtractKeywords(text string) []string {
-	tr := textrank.NewTextRank()
-	rule := textrank.NewDefaultRule()
-	language := textrank.NewDefaultLanguage()
-	algorithmDef := textrank.NewDefaultAlgorithm()
-
-	tr.Populate(text, language, rule)
-	tr.Ranking(algorithmDef)
+	tr := newTextRank(text)
 
 	w := textrank.FindSingleWords(tr)
 
@@ -23,6 +17,7 @@ func ExtractKeywords(text string) []string {
 	for i := range w {
 		res = append(res, w[i].Word)
 	}
+
 	return res
 }
 
@@ -35,6 +30,18 @@ func ExtractSentences(text string, count int) []string {
 		text = strings.ReplaceAll(text, rep[i], temp)
 	}
 
+	tr := newTextRank(text)
+
+	s := textrank.FindSentencesByWordQtyWeight(tr, count)
+	var res []string
+	for i := range s {
+		res = append(res, strings.ReplaceAll(s[i].Value, "~", "."))
+	}
+
+	return res
+}
+
+func newTextRank(text string) *textrank.TextRank {
 	tr := textrank.NewTextRank()
 	rule := textrank.NewDefaultRule()
 	language := textrank.NewDefaultLanguage()
@@ -43,10 +50,5 @@ func ExtractSentences(text string, count int) []string {
 	tr.Populate(text, language, rule)
 	tr.Ranking(algorithmDef)
 
-	s := textrank.FindSentencesByWordQtyWeight(tr, count)
-	var res []string
-	for i := range s {
-		res = append(res, strings.ReplaceAll(s[i].Value, "~", "."))
-	}
-	return res
+	return tr
 }

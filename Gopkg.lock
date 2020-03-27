@@ -39,6 +39,14 @@
   revision = "61d9dc4d719557facf8e9f7ac2e1e215d2167462"
 
 [[projects]]
+  digest = "1:114ecad51af93a73ae6781fd0d0bc28e52b433c852b84ab4b4c109c15e6c6b6d"
+  name = "github.com/jroimartin/gocui"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c055c87ae801372cd74a0839b972db4f7697ae5f"
+  version = "v0.4.0"
+
+[[projects]]
   digest = "1:eb1bffab7260bf5ddc95fc2c41d4bfee1a4f5fe18194b3946fe8a9e9121a282f"
   name = "github.com/mattn/go-runewidth"
   packages = ["."]
@@ -48,11 +56,19 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:2a46ee21e9d7b238e4dfc53d573a48d9a1e5bb18843a2f455320a5f80b7d93e5"
+  digest = "1:9e644a6acf4df1a47b084fe11686130e0b0c49c9de08339ac25c1d20f19cc088"
   name = "github.com/mkhoi1998/Stack-on-Go"
   packages = ["stackongo"]
   pruneopts = "UT"
-  revision = "1f3663f2ffc98f3f4d8f4b851aad4c1c9d0fed53"
+  revision = "67f606fd2d095464fd454f5cf1e59c55e4f4a0bd"
+
+[[projects]]
+  branch = "master"
+  digest = "1:f7fff9f0feaf7cc31981180fa02dc09fe11a4881b1b60f7e79b4c86a37389382"
+  name = "github.com/nsf/termbox-go"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "4d2b513ad8bee47a9a5a65b0dee0182049a31916"
 
 [[projects]]
   digest = "1:b8261a46d75566ebf5b4fb6bb762f54f47e6633e0995118393afc80bb1f428f5"
@@ -137,6 +153,7 @@
     "github.com/DavidBelicza/TextRank",
     "github.com/agonopol/go-stem",
     "github.com/jaytaylor/html2text",
+    "github.com/jroimartin/gocui",
     "github.com/mkhoi1998/Stack-on-Go/stackongo",
     "github.com/sahilm/fuzzy",
     "github.com/spf13/cobra",
