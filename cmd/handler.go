@@ -222,5 +222,5 @@ func parseResponseByCode(codes []string, ans string, link string) string {
 			}
 		}
 	}
-	return fmt.Sprintf("%v\n%v", strings.Join(codes, "\n\n"), link)
+	return fmt.Sprintf("%v\n\n%v", strings.Join(codes, "\n\n"), link)
 }

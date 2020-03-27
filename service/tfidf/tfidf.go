@@ -38,7 +38,7 @@ func GetMostImportant(text []string, isSt bool) []string {
 		for j := range w {
 			weight += w[j]
 		}
-		if isSt {
+		if isSt && len(wD) != 0 {
 			if weight > 1 {
 				continue
 			}
@@ -49,7 +49,7 @@ func GetMostImportant(text []string, isSt bool) []string {
 	sort.Slice(wD[:], func(i, j int) bool {
 		return wD[i].Weight < wD[j].Weight
 	})
-	if len(wD) != 0 {
+	if len(wD) != 0 && len(wD) != 1 {
 		if wD[0].Weight == wD[len(wD)-1].Weight {
 			return nil
 		}
