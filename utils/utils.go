@@ -60,8 +60,8 @@ func ExtractLongestBody(regex, content string) string {
 }
 
 // ExtractHeaders return the headers of the html
-func ExtractHeaders(regex, content string) []string {
-	headers := regexp.MustCompile(regex)
+func ExtractHeaders(content string) []string {
+	headers := regexp.MustCompile(`(\*\*+|--+\n)?(.*)(\n(\*\*+|--+))`)
 	s := headers.FindAllStringSubmatch(content, -1)
 	var res []string
 	for i := range s {
@@ -71,7 +71,16 @@ func ExtractHeaders(regex, content string) []string {
 }
 
 // ExtractBody return the bodies of the html
-func ExtractBody(regex, content string) []string {
-	header := regexp.MustCompile(regex)
+func ExtractBody(content string) []string {
+	header := regexp.MustCompile(`((\n\n+)|(\n(\*\*+|--+)\n)|((\*\*+|--+)\n))`)
 	return header.Split(content, -1)
+}
+
+func ParseHTMLToContent(content string) string {
+	h := regexp.MustCompile(`(<.*>)(.*)(<\/.*>)`)
+	sub := h.FindAllStringSubmatch(content, -1)
+	for i := range sub {
+		content = strings.ReplaceAll(content, sub[i][0], sub[i][2])
+	}
+	return content
 }

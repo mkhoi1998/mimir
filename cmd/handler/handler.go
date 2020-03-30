@@ -65,13 +65,13 @@ func ExtractStackWiki(keywords []string) string {
 		return ""
 	}
 
-	h := similar.GetMostSimilar(header, utils.ExtractHeaders(`(\*\*+|--+\n)?(.*)(\n(\*\*+|--+))`, wiki))
+	h := similar.GetMostSimilar(header, utils.ExtractHeaders(wiki))
 	if h == "" {
 		return h
 	}
 
 	var body string
-	parts := utils.ExtractBody(`((\n\n+)|(\n(\*\*+|--+)\n)|((\*\*+|--+)\n))`, wiki)
+	parts := utils.ExtractBody(wiki)
 	for j := range parts {
 		if parts[j] == h {
 			body = parts[j+1]
@@ -151,7 +151,7 @@ func extractContent(link string) string {
 			if content == "" {
 				consts.ParseLink(link)
 			}
-			return content
+			return fmt.Sprintf("%v\n\n%v", content, consts.ParseLink(link))
 		}
 
 		return fmt.Sprintf("%v\n%v", utils.ExtractLongestBody(`(\*\*+)|(--+)`, content), consts.ParseLink(link))

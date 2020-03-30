@@ -4,6 +4,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/mkhoi1998/devsup/utils"
 	"github.com/wilcosheh/tfidf"
 )
 
@@ -57,7 +58,8 @@ func GetMostImportant(text []string, isSt bool) []string {
 
 	var res []string
 	for i := range wD {
-		res = append(res, wD[i].Data)
+		data := utils.ParseHTMLToContent(wD[i].Data)
+		res = append(res, data)
 	}
 	if len(res) > 3 {
 		res = res[:3]
