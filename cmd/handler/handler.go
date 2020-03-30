@@ -185,9 +185,10 @@ func parseResponseByCode(codes []string, content string, link string) string {
 		for i := range parts {
 			if strings.Contains(parts[i], strings.Split(codes[j], "\n")[0]) {
 				// ignore when code in headers
+				isDuplicate := false
 				for k := range hList {
 					if strings.Contains(k, codes[j]) {
-						continue
+						isDuplicate = true
 					}
 				}
 
@@ -208,7 +209,7 @@ func parseResponseByCode(codes []string, content string, link string) string {
 				hList[header] = true
 
 				r := fmt.Sprintf("\033[2;33m%v\033[0m", header)
-				if index == 0 {
+				if !isDuplicate {
 					r = fmt.Sprintf("%v\n\n%v", r, codes[j])
 				}
 				res = append(res, r)
