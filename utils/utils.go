@@ -76,6 +76,7 @@ func ExtractBody(content string) []string {
 	return header.Split(content, -1)
 }
 
+// ParseHTMLToContent remove html tag in code block
 func ParseHTMLToContent(content string) string {
 	h := regexp.MustCompile(`(<.*>)(.*)(<\/.*>)`)
 	sub := h.FindAllStringSubmatch(content, -1)
@@ -85,7 +86,7 @@ func ParseHTMLToContent(content string) string {
 	return content
 }
 
-//
+// ReplaceAllTag remove leftover tag by html2vec
 func ReplaceAllTag(content string) string {
 	h := regexp.MustCompile(`<.*>`)
 	return h.ReplaceAllString(content, "")

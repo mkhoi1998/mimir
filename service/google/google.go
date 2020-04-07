@@ -50,6 +50,9 @@ func GetContent(link string) string {
 	if err != nil {
 		return ""
 	}
+	if !strings.Contains(r.Header.Get("content-type"), "html") {
+		return ""
+	}
 
 	bodyBytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {

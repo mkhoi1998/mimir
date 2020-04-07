@@ -192,6 +192,9 @@ func extractContent(link string) string {
 
 		}
 	}
+	for i := range cts {
+		cts[i] = strings.ReplaceAll(cts[i], "*", "")
+	}
 	if len(cts) > 20 {
 		res := strings.Join(textrank.ExtractSentences(strings.Join(cts, "\n"), 2), "\n\n")
 		return fmt.Sprintf("%v\n\n%v", res, consts.ParseLink(link))
