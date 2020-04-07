@@ -61,7 +61,7 @@ func GetContent(link string) string {
 		return b
 	}
 
-	t, err := html2text.FromString(b)
+	t, err := html2text.FromString(b, html2text.Options{OmitLinks: true})
 	if err != nil {
 		return ""
 	}

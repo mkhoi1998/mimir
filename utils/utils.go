@@ -84,3 +84,9 @@ func ParseHTMLToContent(content string) string {
 	}
 	return content
 }
+
+//
+func ReplaceAllTag(content string) string {
+	h := regexp.MustCompile(`<.*>`)
+	return h.ReplaceAllString(content, "")
+}

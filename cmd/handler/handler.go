@@ -157,7 +157,48 @@ func extractContent(link string) string {
 		return fmt.Sprintf("%v\n%v", utils.ExtractLongestBody(`(\*\*+)|(--+)`, content), consts.ParseLink(link))
 	}
 
-	return consts.ParseLink(link)
+	ct := utils.ExtractBody(content)
+	var cts []string
+	dup := map[string]bool{}
+	for i := range ct {
+		if ct[i] == "" {
+			continue
+		}
+		temp := strings.Split(ct[i], "\n")
+		isContent := true
+		for j := range temp {
+			if temp[j] == "" {
+				continue
+			}
+			if len(strings.Split(temp[j], " ")) < 10 || len(temp[j]) < 100 {
+				if len(ct[i]) > 400 && !strings.Contains(ct[i], "*") {
+					continue
+				}
+				isContent = false
+				break
+			}
+		}
+		if isContent {
+			if !dup[ct[i]] {
+				cts = append(cts, utils.ReplaceAllTag(ct[i]))
+				dup[ct[i]] = true
+			}
+			if i < len(ct)-2 {
+				if !dup[ct[i+1]] {
+					cts = append(cts, utils.ReplaceAllTag(ct[i+1]))
+					dup[ct[i+1]] = true
+				}
+			}
+
+		}
+	}
+	if len(cts) > 20 {
+		res := strings.Join(textrank.ExtractSentences(strings.Join(cts, "\n"), 2), "\n\n")
+		return fmt.Sprintf("%v\n\n%v", res, consts.ParseLink(link))
+
+	}
+	res := strings.Join(cts, "\n\n")
+	return fmt.Sprintf("%v\n\n%v", res, consts.ParseLink(link))
 }
 
 func parseResponseByCode(codes []string, content string, link string) string {

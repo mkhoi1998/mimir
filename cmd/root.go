@@ -8,7 +8,7 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:                   "devups",
+	Use:                   "mimir",
 	Long:                  `A command-line assistant for developers`,
 	Args:                  cobra.MinimumNArgs(0),
 	DisableFlagsInUseLine: true,
