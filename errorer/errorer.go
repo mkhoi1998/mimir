@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/mkhoi1998/devsup/consts"
+	"github.com/mkhoi1998/mimir/consts"
 )
 
 var (

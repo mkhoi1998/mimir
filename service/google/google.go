@@ -10,7 +10,7 @@ import (
 
 	"github.com/jaytaylor/html2text"
 
-	"github.com/mkhoi1998/devsup/utils"
+	"github.com/mkhoi1998/mimir/utils"
 )
 
 // SearchGoogle return the first link from google search using queries

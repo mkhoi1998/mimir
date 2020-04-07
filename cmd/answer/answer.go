@@ -3,8 +3,8 @@ package answer
 import (
 	"fmt"
 
-	"github.com/mkhoi1998/devsup/cmd/handler"
-	"github.com/mkhoi1998/devsup/errorer"
+	"github.com/mkhoi1998/mimir/cmd/handler"
+	"github.com/mkhoi1998/mimir/errorer"
 )
 
 // Handler response input question based on keywords and online resources (Stackoverflow and Google)

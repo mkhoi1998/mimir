@@ -3,8 +3,8 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/mkhoi1998/devsup/cmd/answer"
-	"github.com/mkhoi1998/devsup/cmd/chat"
+	"github.com/mkhoi1998/mimir/cmd/answer"
+	"github.com/mkhoi1998/mimir/cmd/chat"
 )
 
 var rootCmd = &cobra.Command{

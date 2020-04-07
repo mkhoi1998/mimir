@@ -3,7 +3,7 @@ package stackoverflow
 import (
 	"github.com/mkhoi1998/Stack-on-Go/stackongo"
 
-	"github.com/mkhoi1998/devsup/consts"
+	"github.com/mkhoi1998/mimir/consts"
 )
 
 // CheckTagFromKeyword check if keyword exist and convert synonyms to keywords

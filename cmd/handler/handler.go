@@ -8,13 +8,13 @@ import (
 	"github.com/jaytaylor/html2text"
 	"golang.org/x/net/html"
 
-	"github.com/mkhoi1998/devsup/consts"
-	"github.com/mkhoi1998/devsup/service/google"
-	"github.com/mkhoi1998/devsup/service/similar"
-	"github.com/mkhoi1998/devsup/service/stackoverflow"
-	"github.com/mkhoi1998/devsup/service/textrank"
-	"github.com/mkhoi1998/devsup/service/tfidf"
-	"github.com/mkhoi1998/devsup/utils"
+	"github.com/mkhoi1998/mimir/consts"
+	"github.com/mkhoi1998/mimir/service/google"
+	"github.com/mkhoi1998/mimir/service/similar"
+	"github.com/mkhoi1998/mimir/service/stackoverflow"
+	"github.com/mkhoi1998/mimir/service/textrank"
+	"github.com/mkhoi1998/mimir/service/tfidf"
+	"github.com/mkhoi1998/mimir/utils"
 )
 
 // ExtractKeywords return the keywords from input question

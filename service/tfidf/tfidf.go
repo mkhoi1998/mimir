@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mkhoi1998/devsup/utils"
+	"github.com/mkhoi1998/mimir/utils"
 	"github.com/wilcosheh/tfidf"
 )
 
