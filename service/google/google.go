@@ -2,6 +2,7 @@ package google
 
 import (
 	"fmt"
+	"html"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -59,6 +60,9 @@ func GetContent(link string) string {
 		return ""
 	}
 	b := string(bodyBytes)
+	b = html.UnescapeString(b)
+	option := regexp.MustCompile(`<option.*>.*<\/option>`)
+	b = option.ReplaceAllString(b, "")
 
 	if strings.Contains(b, "<code>") {
 		return b

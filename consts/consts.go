@@ -38,5 +38,5 @@ var (
 
 func ParseLink(link string) string {
 	rand.Seed(time.Now().Unix())
-	return fmt.Sprintf("%v\n%v", link, Helps[rand.Intn(len(Helps))])
+	return fmt.Sprintf("\n\n%v\n%v", link, Helps[rand.Intn(len(Helps))])
 }

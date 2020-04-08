@@ -22,8 +22,8 @@ var chatCmd = &cobra.Command{
 	Long:                  `Chat with me!`,
 	Args:                  cobra.MinimumNArgs(0),
 	DisableFlagsInUseLine: true,
-	Run: func(cmd *cobra.Command, args []string) {
-		chat.Handler(args)
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return chat.Handler(args)
 	},
 }
 

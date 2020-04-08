@@ -23,10 +23,14 @@ func ExtractKeywords(text string) []string {
 
 // ExtractSentences return the most important sentences of text
 func ExtractSentences(text string, count int) []string {
-	r := regexp.MustCompile(`([a-z0-9])(\.[a-z0-9])+|\.\.+`)
+	r := regexp.MustCompile(`[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+|(\.\.+)|(\x60.*\x60)|(".*")|('.*')`)
 	rep := r.FindAllString(text, -1)
 	for i := range rep {
-		temp := strings.ReplaceAll(rep[i], ".", "~")
+		temp := strings.ReplaceAll(rep[i], "...", "~~~~~~~~~")
+		temp = strings.ReplaceAll(temp, "..", "~~~~~~~")
+		temp = strings.ReplaceAll(temp, "?", "~~~~~")
+		temp = strings.ReplaceAll(temp, "!", "~~~")
+		temp = strings.ReplaceAll(temp, ".", "~")
 		text = strings.ReplaceAll(text, rep[i], temp)
 	}
 
@@ -35,7 +39,12 @@ func ExtractSentences(text string, count int) []string {
 	s := textrank.FindSentencesByWordQtyWeight(tr, count)
 	var res []string
 	for i := range s {
-		res = append(res, strings.ReplaceAll(s[i].Value, "~", "."))
+		temp := strings.ReplaceAll(s[i].Value, "~~~~~~~~~", "...")
+		temp = strings.ReplaceAll(temp, "~~~~~~~", "..")
+		temp = strings.ReplaceAll(temp, "~~~~~", "?")
+		temp = strings.ReplaceAll(temp, "~~~", "!")
+		temp = strings.ReplaceAll(temp, "~", ".")
+		res = append(res, temp)
 	}
 
 	return res

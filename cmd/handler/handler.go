@@ -144,14 +144,13 @@ func extractContent(link string) string {
 	}
 
 	content := google.GetContent(link)
-	// do not summarize when content is too long
 	if len(strings.Split(content, "\n\n")) < 17 {
 		if strings.Contains(content, "<code>") {
 			content := ParseContent(content, "")
 			if content == "" {
 				consts.ParseLink(link)
 			}
-			return fmt.Sprintf("%v\n\n%v", content, consts.ParseLink(link))
+			return fmt.Sprintf("%v%v", content, consts.ParseLink(link))
 		}
 
 		return fmt.Sprintf("%v\n%v", utils.ExtractLongestBody(`(\*\*+)|(--+)`, content), consts.ParseLink(link))
@@ -171,7 +170,9 @@ func extractContent(link string) string {
 				continue
 			}
 			if len(strings.Split(temp[j], " ")) < 10 || len(temp[j]) < 100 {
-				if len(ct[i]) > 400 && !strings.Contains(ct[i], "*") {
+				if len(ct[i]) > 400 && !strings.Contains(ct[i], "*") &&
+					!strings.Contains(ct[i], ".jpg") && !strings.Contains(ct[i], ".jpeg") &&
+					!strings.Contains(ct[i], ".png") && !strings.Contains(ct[i], ".gif") {
 					continue
 				}
 				isContent = false
@@ -180,12 +181,12 @@ func extractContent(link string) string {
 		}
 		if isContent {
 			if !dup[ct[i]] {
-				cts = append(cts, utils.ReplaceAllTag(ct[i]))
+				cts = append(cts, utils.RemoveAllTag(ct[i]))
 				dup[ct[i]] = true
 			}
 			if i < len(ct)-2 {
 				if !dup[ct[i+1]] {
-					cts = append(cts, utils.ReplaceAllTag(ct[i+1]))
+					cts = append(cts, utils.RemoveAllTag(ct[i+1]))
 					dup[ct[i+1]] = true
 				}
 			}
@@ -195,13 +196,17 @@ func extractContent(link string) string {
 	for i := range cts {
 		cts[i] = strings.ReplaceAll(cts[i], "*", "")
 	}
+	var res string
 	if len(cts) > 20 {
-		res := strings.Join(textrank.ExtractSentences(strings.Join(cts, "\n"), 2), "\n\n")
-		return fmt.Sprintf("%v\n\n%v", res, consts.ParseLink(link))
-
+		res = fmt.Sprintf("%v%v", strings.Join(textrank.ExtractSentences(strings.Join(cts, "\n"), 1), "\n\n"), consts.ParseLink(link))
+	} else {
+		res = fmt.Sprintf("%v%v", strings.Join(cts, "\n\n"), consts.ParseLink(link))
 	}
-	res := strings.Join(cts, "\n\n")
-	return fmt.Sprintf("%v\n\n%v", res, consts.ParseLink(link))
+	if strings.Count(res, "\n") >= 50 {
+		return consts.ParseLink(link)
+	}
+
+	return utils.TrimSapce(res)
 }
 
 func parseResponseByCode(codes []string, content string, link string) string {
@@ -209,7 +214,6 @@ func parseResponseByCode(codes []string, content string, link string) string {
 
 	// split parts from content
 	var parts []string
-	content = html.UnescapeString(content)
 	if isSt {
 		parts = strings.Split(content, "\n\n")
 	} else {
@@ -252,7 +256,7 @@ func parseResponseByCode(codes []string, content string, link string) string {
 				}
 				hList[header] = true
 
-				r := fmt.Sprintf("\033[2;33m%v\033[0m", header)
+				r := fmt.Sprintf("\033[0;36m%v\033[0m", header)
 				if !isDuplicate {
 					r = fmt.Sprintf("%v\n\n%v", r, codes[j])
 				}
@@ -262,7 +266,7 @@ func parseResponseByCode(codes []string, content string, link string) string {
 	}
 
 	if isSt {
-		return fmt.Sprintf("%v\n\n%v", strings.Join(res, "\n\n"), consts.ParseLink(link))
+		return fmt.Sprintf("%v%v", strings.Join(res, "\n\n"), consts.ParseLink(link))
 	}
 
 	return strings.Join(res, "\n\n")

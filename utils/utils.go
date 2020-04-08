@@ -86,8 +86,14 @@ func ParseHTMLToContent(content string) string {
 	return content
 }
 
-// ReplaceAllTag remove leftover tag by html2vec
-func ReplaceAllTag(content string) string {
+// RemoveAllTag remove leftover tag by html2text
+func RemoveAllTag(content string) string {
 	h := regexp.MustCompile(`<.*>`)
 	return h.ReplaceAllString(content, "")
+}
+
+// TrimSapce remove +3 \n
+func TrimSapce(content string) string {
+	h := regexp.MustCompile(`(\n[\t ]*)(\n[\t ]*)(\n[\t ]*)+`)
+	return h.ReplaceAllString(content, "\n\n")
 }
