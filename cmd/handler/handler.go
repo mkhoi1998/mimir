@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/jaytaylor/html2text"
-	"golang.org/x/net/html"
 
 	"github.com/mkhoi1998/mimir/consts"
 	"github.com/mkhoi1998/mimir/service/google"
@@ -25,27 +24,19 @@ func ExtractKeywords(args []string) []string {
 	return textrank.ExtractKeywords(strings.Join(args, " "))
 }
 
-// ExtractGoogle return the content of the web page or the link gotten by Google
-func ExtractGoogle(args []string) string {
-	link := google.SearchGoogle(args)
-	if link == "" {
-		return ""
-	}
-	return extractContent(link)
-}
-
 // SummarizeStackWiki return the sumarized content of stack wiki
 func SummarizeStackWiki(keyword string) string {
 	tag, isTag := stackoverflow.CheckTagFromKeyword(keyword)
-	if isTag {
-		wiki, err := html2text.FromString(stackoverflow.GetWikiFromTag(tag))
-		if err != nil {
-			return ""
-		}
-		res := strings.Join(textrank.ExtractSentences(wiki, 2), "")
-		return strings.ReplaceAll(res, "*", "")
+	if !isTag {
+		return ""
 	}
-	return ""
+
+	wiki, err := html2text.FromString(stackoverflow.GetWikiFromTag(tag))
+	if err != nil {
+		return ""
+	}
+	res := strings.Join(textrank.ExtractSentences(wiki, 2), "")
+	return strings.ReplaceAll(res, "*", "")
 }
 
 // ExtractStackWiki return body of the specified header of the stack wiki
@@ -82,52 +73,22 @@ func ExtractStackWiki(keywords []string) string {
 	return body
 }
 
-// SearchStackoverflow return the contents of the answer from Stackoverflow
-func SearchStackoverflow(keywords []string) string {
+// SummarizeStackoverflow return the summarized contents of the answer from Stackoverflow
+func SummarizeStackoverflow(keywords []string) string {
 	ans, link := stackoverflow.GetAnswerFromSearch(keywords)
 	if ans == "" {
 		return ans
 	}
-	return ParseContent(ans, link)
+	return sumarizeSmallContent(strings.Split(ans, "<hr")[0], link)
 }
 
-// ParseContent return the summarized content or the link if the content is too long
-func ParseContent(content string, link string) string {
-	isSt := link != ""
-	if isSt {
-		content = strings.Split(content, "<hr")[0]
-	}
-
-	doc, err := html.Parse(strings.NewReader(content))
-	if err != nil {
+// SummarizeGoogle return the summarized content of the web page or the link gotten by Google
+func SummarizeGoogle(args []string) string {
+	link := google.SearchGoogle(args)
+	if link == "" {
 		return ""
 	}
-	codes, err := utils.ExtractTag(doc, "code")
 
-	// content does not have tag code
-	if err != nil {
-		res, err := html2text.FromString(content)
-		if err != nil {
-			return ""
-		}
-
-		// remove quote symbols for clearer display
-		res = strings.TrimSpace(strings.ReplaceAll(res, "\n>", ""))
-
-		// if body is too long then just return the link
-		if len(strings.Split(res, "\n\n")) > 5 {
-			return consts.ParseLink(link)
-		}
-		return res
-	}
-	pCodes := tfidf.GetMostImportant(codes, isSt)
-	if pCodes == nil {
-		return ""
-	}
-	return parseResponseByCode(pCodes, content, link)
-}
-
-func extractContent(link string) string {
 	if strings.Contains(link, "stackoverflow.com") {
 		s := strings.Split(link, "/")
 		id, err := strconv.Atoi(s[4])
@@ -140,13 +101,13 @@ func extractContent(link string) string {
 			return consts.ParseLink(link)
 		}
 
-		return ParseContent(ans, link)
+		return sumarizeSmallContent(strings.Split(ans, "<hr")[0], link)
 	}
 
 	content := google.GetContent(link)
 	if len(strings.Split(content, "\n\n")) < 17 {
 		if strings.Contains(content, "<code>") {
-			content := ParseContent(content, "")
+			content := sumarizeSmallContent(content, "")
 			if content == "" {
 				consts.ParseLink(link)
 			}
@@ -206,10 +167,68 @@ func extractContent(link string) string {
 		return consts.ParseLink(link)
 	}
 
-	return utils.TrimSapce(res)
+	return utils.TrimSpace(res)
 }
 
-func parseResponseByCode(codes []string, content string, link string) string {
+// GetStackWiki return the body of the stack wiki
+func GetStackWiki(keyword string) []string {
+	tag, isTag := stackoverflow.CheckTagFromKeyword(keyword)
+	if !isTag {
+		return nil
+	}
+
+	wiki, err := html2text.FromString(stackoverflow.GetWikiFromTag(tag))
+	if err != nil {
+		return nil
+	}
+
+	return utils.ExtractBody(wiki)
+}
+
+// GetStackoverflow return the full contents of the answer from Stackoverflow
+func GetStackoverflow(keywords []string) []string {
+	ans, link := stackoverflow.GetAnswerFromSearch(keywords)
+	if ans == "" {
+		return nil
+	}
+
+	res, err := html2text.FromString(ans)
+	if err != nil {
+		return nil
+	}
+
+	// remove quote symbols for clearer display
+	res = strings.TrimSpace(strings.ReplaceAll(res, "\n>", ""))
+
+	return append(strings.Split(res, "\n\n"), consts.ParseLink(link))
+}
+
+func sumarizeSmallContent(content, link string) string {
+	codes, err := utils.ExtractTag(content, "code")
+	if err == nil {
+		return summarizeCodeContent(codes, content, link)
+	}
+	// content does not have tag code
+	res, err := html2text.FromString(content)
+	if err != nil {
+		return ""
+	}
+
+	// remove quote symbols for clearer display
+	res = strings.TrimSpace(strings.ReplaceAll(res, "\n>", ""))
+
+	// if body is too long then just return the link
+	if len(strings.Split(res, "\n\n")) > 5 {
+		if link != "" {
+			return consts.ParseLink(link)
+		}
+		return link
+	}
+	return res
+
+}
+
+func summarizeCodeContent(codes []string, content string, link string) string {
 	isSt := link != ""
 
 	// split parts from content
@@ -226,8 +245,12 @@ func parseResponseByCode(codes []string, content string, link string) string {
 
 	// pList to check duplicate headers for code
 	hList := map[string]bool{}
-
 	var res []string
+
+	codes = tfidf.GetMostImportant(codes, isSt)
+	if codes == nil {
+		return ""
+	}
 
 	for j := range codes {
 		for i := range parts {

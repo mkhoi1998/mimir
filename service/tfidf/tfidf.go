@@ -1,10 +1,10 @@
 package tfidf
 
 import (
+	"regexp"
 	"sort"
 	"strings"
 
-	"github.com/mkhoi1998/mimir/utils"
 	"github.com/wilcosheh/tfidf"
 )
 
@@ -58,8 +58,12 @@ func GetMostImportant(text []string, isSt bool) []string {
 
 	var res []string
 	for i := range wD {
-		data := utils.ParseHTMLToContent(wD[i].Data)
-		res = append(res, data)
+		h := regexp.MustCompile(`(<.*>)(.*)(<\/.*>)`)
+		sub := h.FindAllStringSubmatch(wD[i].Data, -1)
+		for i := range sub {
+			wD[i].Data = strings.ReplaceAll(wD[i].Data, sub[i][0], sub[i][2])
+		}
+		res = append(res, wD[i].Data)
 	}
 	if len(res) > 3 {
 		res = res[:3]

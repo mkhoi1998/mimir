@@ -12,7 +12,12 @@ import (
 )
 
 // ExtractTag return the content of the provided html tag
-func ExtractTag(doc *html.Node, tag string) ([]string, error) {
+func ExtractTag(content, tag string) ([]string, error) {
+	doc, err := html.Parse(strings.NewReader(content))
+	if err != nil {
+		return nil, err
+	}
+	
 	var code []string
 	var crawler func(*html.Node)
 	crawler = func(node *html.Node) {
@@ -76,15 +81,6 @@ func ExtractBody(content string) []string {
 	return header.Split(content, -1)
 }
 
-// ParseHTMLToContent remove html tag in code block
-func ParseHTMLToContent(content string) string {
-	h := regexp.MustCompile(`(<.*>)(.*)(<\/.*>)`)
-	sub := h.FindAllStringSubmatch(content, -1)
-	for i := range sub {
-		content = strings.ReplaceAll(content, sub[i][0], sub[i][2])
-	}
-	return content
-}
 
 // RemoveAllTag remove leftover tag by html2text
 func RemoveAllTag(content string) string {
@@ -92,8 +88,8 @@ func RemoveAllTag(content string) string {
 	return h.ReplaceAllString(content, "")
 }
 
-// TrimSapce remove +3 \n
-func TrimSapce(content string) string {
+// TrimSpace remove +3 \n
+func TrimSpace(content string) string {
 	h := regexp.MustCompile(`(\n[\t ]*)(\n[\t ]*)(\n[\t ]*)+`)
 	return h.ReplaceAllString(content, "\n\n")
 }

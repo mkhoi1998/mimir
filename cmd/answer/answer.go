@@ -15,38 +15,23 @@ func Handler(args []string) {
 func responseAnswer(args []string) string {
 	keywords := handler.ExtractKeywords(args)
 
+	var res string
 	switch len(keywords) {
 	case 0:
 		return errorer.ErrEmptyQuestion.Error()
-
 	case 1:
-		res := handler.SummarizeStackWiki(keywords[0])
-		if res == "" {
-			res = handler.ExtractGoogle(args)
-		}
-		if res == "" {
-			res = errorer.ErrInternal.Error()
-		}
-		return res
-
+		res = handler.SummarizeStackWiki(keywords[0])
 	case 2:
-		res := handler.ExtractStackWiki(keywords)
-		if res == "" {
-			res = handler.ExtractGoogle(args)
-		}
-		if res == "" {
-			res = errorer.ErrInternal.Error()
-		}
-		return res
-
+		res = handler.ExtractStackWiki(keywords)
 	default:
-		res := handler.SearchStackoverflow(keywords)
-		if res == "" {
-			res = handler.ExtractGoogle(args)
-		}
-		if res == "" {
-			res = errorer.ErrInternal.Error()
-		}
-		return res
+		res = handler.SummarizeStackoverflow(keywords)
 	}
+
+	if res == "" {
+		res = handler.SummarizeGoogle(args)
+	}
+	if res == "" {
+		res = errorer.ErrInternal.Error()
+	}
+	return res
 }

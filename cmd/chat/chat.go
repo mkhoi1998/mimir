@@ -48,11 +48,11 @@ func drawchat() error {
 	ov.Wrap = true
 	ov.Frame = false
 
-	// Send a welcome message.
-	err = renderChat(ov, "Press Ctrl-C to quit.", 0, termwidth/3)
-	if err != nil {
-		return err
-	}
+	// // Send a welcome message.
+	// err = renderChat(ov, "Press Ctrl-C to quit.", 0, termwidth/3)
+	// if err != nil {
+	// 	return err
+	// }
 
 	// Input.
 	iv, err := g.SetView("input", 0, termheight-3, termwidth-1, termheight-1)

@@ -2,6 +2,7 @@ package stackoverflow
 
 import (
 	"github.com/mkhoi1998/Stack-on-Go/stackongo"
+	"golang.org/x/net/html"
 
 	"github.com/mkhoi1998/mimir/consts"
 )
@@ -70,7 +71,7 @@ func GetAnswerFromSearch(query []string) (string, string) {
 			}
 
 			if len(ans.Items) != 0 {
-				return ans.Items[0].Body, ans.Items[0].Link
+				return html.UnescapeString(ans.Items[0].Body), ans.Items[0].Link
 			}
 		}
 
@@ -95,7 +96,7 @@ func GetAnswerFromQuestionID(id int) (string, string) {
 	}
 
 	if len(ans.Items) != 0 {
-		return ans.Items[0].Body, ans.Items[0].Link
+		return html.UnescapeString(ans.Items[0].Body), ans.Items[0].Link
 	}
 
 	return "", ""
