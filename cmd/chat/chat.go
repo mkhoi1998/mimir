@@ -3,16 +3,22 @@ package chat
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/jroimartin/gocui"
+	"github.com/mkhoi1998/mimir/cmd/handler"
+	"github.com/mkhoi1998/mimir/errorer"
 )
 
 // Handler create a chat windows on terminal for chatting with bot
 func Handler(args []string) error {
-	return drawchat()
+	input := make(chan string)
+	output := make(chan []string)
+	go processAnswer(input, output)
+	return drawchat(input, output)
 }
 
-func drawchat() error {
+func drawchat(input chan string, output chan []string) error {
 	// Create a new GUI.
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
@@ -113,6 +119,8 @@ func drawchat() error {
 			return err
 		}
 
+		input <- iv.Buffer()
+
 		// Reset input.
 		iv.Clear()
 
@@ -129,6 +137,27 @@ func drawchat() error {
 	_, err = g.SetCurrentView("input")
 	if err != nil {
 	}
+
+	go func() {
+		for {
+			select {
+			case mimirOutput := <-output:
+				for i := range mimirOutput {
+					if mimirOutput[i] == "" {
+						break
+					}
+					if len(mimirOutput[i]) > 300 || i%5 == 0 {
+						time.Sleep(5 * time.Second)
+					}
+					renderChat(ov, mimirOutput[i], 0, termwidth/2)
+					// Refresh view
+					g.Update(func(g *gocui.Gui) error {
+						return nil
+					})
+				}
+			}
+		}
+	}()
 
 	// Start the main loop.
 	err = g.MainLoop()
@@ -152,10 +181,13 @@ func renderChat(v *gocui.View, chat string, x0, x1 int) error {
 	isUser := x0 != 0
 	termwidth, _ := v.Size()
 	width := x1 - x0
-	parts := strings.Fields(chat)
+	chat = strings.ReplaceAll(chat, "( ", "(")
+	chat = strings.ReplaceAll(chat, " )", ")")
+	parts := strings.Split(strings.TrimSuffix(chat, "\n"), " ")
 	var r string
 	var res []string
 	for i := range parts {
+		parts[i] = strings.TrimSpace(parts[i])
 		if len(r)+len(parts[i]) > width {
 			res = append(res, r)
 			r = ""
@@ -183,5 +215,29 @@ func renderChat(v *gocui.View, chat string, x0, x1 int) error {
 	}
 	_, err := fmt.Fprint(v, strings.Join(res, ""), "\n")
 	return err
+
+}
+
+func processAnswer(input chan string, output chan []string) {
+	for {
+		select {
+		case userInput := <-input:
+			keywords := handler.ExtractKeywords(userInput)
+
+			var res []string
+
+			switch len(keywords) {
+			case 0:
+				res = append(res, errorer.ErrEmptyQuestion.Error())
+			case 1:
+				res = handler.GetStackWiki(keywords[0])
+			case 2:
+				res = strings.Split(handler.ExtractStackWiki(keywords), "\n")[1:]
+			default:
+				res = handler.GetStackoverflow(keywords)
+			}
+			output <- res
+		}
+	}
 
 }

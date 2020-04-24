@@ -18,11 +18,11 @@ import (
 )
 
 // ExtractKeywords return the keywords from input question
-func ExtractKeywords(args []string) []string {
+func ExtractKeywords(args string) []string {
 	if len(args) == 0 {
 		return nil
 	}
-	return textrank.ExtractKeywords(strings.Join(args, " "))
+	return textrank.ExtractKeywords(args)
 }
 
 // SummarizeStackWiki return the summarized content of stack wiki
@@ -299,6 +299,9 @@ func summarizeContent(content string) string {
 	}
 	quote := regexp.MustCompile(`\[ .* \]`)
 	res = quote.ReplaceAllString(res, "")
+	if len(res) > 2000 {
+		return ""
+	}
 
 	return utils.TrimSpace(res)
 }

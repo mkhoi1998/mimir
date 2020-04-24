@@ -2,6 +2,7 @@ package answer
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/mkhoi1998/mimir/cmd/handler"
 	"github.com/mkhoi1998/mimir/errorer"
@@ -13,7 +14,7 @@ func Handler(args []string) {
 }
 
 func responseAnswer(args []string) string {
-	keywords := handler.ExtractKeywords(args)
+	keywords := handler.ExtractKeywords(strings.Join(args, " "))
 
 	var res string
 	switch len(keywords) {
