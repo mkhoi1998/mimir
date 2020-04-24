@@ -92,7 +92,12 @@ func SummarizeGoogle(args []string) string {
 	var res string
 
 	if strings.Contains(link, "stackoverflow.com") {
-		res = summarizeStackoverflowLink(link)
+		return summarizeStackoverflowLink(link)
+	}
+
+	// currently hard code for youtube
+	if strings.Contains(link, "youtube.com") {
+		return consts.ParseLink(link)
 	}
 
 	content := google.GetContent(link)
@@ -100,7 +105,9 @@ func SummarizeGoogle(args []string) string {
 		res = summarizeCodeContent(content, "")
 	}
 
-	res = summarizeContent(content)
+	if res == "" {
+		res = summarizeContent(content)
+	}
 
 	res = fmt.Sprintf("%v%v", res, consts.ParseLink(link))
 	return res
@@ -234,6 +241,7 @@ func summarizeContent(content string) string {
 			if temp[j] == "" {
 				continue
 			}
+
 			if len(strings.Split(temp[j], " ")) < 10 || len(temp[j]) < 160 {
 				if len(ct[i]) > 100 && !link.MatchString(ct[i]) && !strings.Contains(ct[i], "#") &&
 					!strings.Contains(ct[i], ".jpg") && !strings.Contains(ct[i], ".jpeg") &&
@@ -278,7 +286,7 @@ func summarizeContent(content string) string {
 		res = strings.Join(cts, "\n\n")
 	}
 
-	// format table
+	// format table and final tune
 	tableBorder := regexp.MustCompile(`\+(-+\+)+`)
 	if tableBorder.MatchString(res) {
 		tableParts := tableBorder.Split(res, -1)
@@ -289,6 +297,8 @@ func summarizeContent(content string) string {
 			}
 		}
 	}
+	quote := regexp.MustCompile(`\[ .* \]`)
+	res = quote.ReplaceAllString(res, "")
 
 	return utils.TrimSpace(res)
 }
