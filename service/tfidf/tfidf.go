@@ -60,8 +60,8 @@ func GetMostImportant(text []string, isSt bool) []string {
 	for i := range wD {
 		h := regexp.MustCompile(`(<.*>)(.*)(<\/.*>)`)
 		sub := h.FindAllStringSubmatch(wD[i].Data, -1)
-		for i := range sub {
-			wD[i].Data = strings.ReplaceAll(wD[i].Data, sub[i][0], sub[i][2])
+		for j := range sub {
+			wD[i].Data = strings.ReplaceAll(wD[i].Data, sub[j][0], sub[j][2])
 		}
 		res = append(res, wD[i].Data)
 	}

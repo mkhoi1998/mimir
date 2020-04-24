@@ -9,8 +9,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/jaytaylor/html2text"
-
 	"github.com/mkhoi1998/mimir/utils"
 )
 
@@ -21,20 +19,19 @@ func SearchGoogle(query []string) string {
 		return ""
 	}
 
-	t, err := html2text.FromReader(r.Body)
+	var res string
+
+	bodyBytes, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return ""
 	}
-
-	var res string
-
 	urlReg := regexp.MustCompile(`q=https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`)
-	matches := urlReg.FindAllString(strings.ReplaceAll(utils.ExtractLongestBody(`\*\*+`, t), "~", "."), -1)
+	matches := urlReg.FindAllString(strings.ReplaceAll(utils.ExtractLongestBody(`\*\*+`, string(bodyBytes)), "~", "."), -1)
 	for i := range matches {
 		if strings.Contains(matches[i], "https://www.google.com") {
 			continue
 		}
-		res = strings.Split(strings.TrimPrefix(matches[i], "q="), "&sa=")[0]
+		res = strings.TrimSuffix(strings.TrimPrefix(matches[i], "q="), "&amp")
 		break
 	}
 	res, err = url.QueryUnescape(res)
@@ -63,14 +60,5 @@ func GetContent(link string) string {
 	b = html.UnescapeString(b)
 	option := regexp.MustCompile(`<option.*>.*<\/option>`)
 	b = option.ReplaceAllString(b, "")
-
-	if strings.Contains(b, "<code>") {
-		return b
-	}
-
-	t, err := html2text.FromString(b, html2text.Options{OmitLinks: true})
-	if err != nil {
-		return ""
-	}
-	return t
+	return b
 }
