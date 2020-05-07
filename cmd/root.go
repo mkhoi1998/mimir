@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/mkhoi1998/mimir/cmd/answer"
-	"github.com/mkhoi1998/mimir/cmd/chat"
+	"github.com/mkhoi1998/mimir/cmd/debug"
 )
 
 var rootCmd = &cobra.Command{
@@ -18,12 +18,12 @@ var rootCmd = &cobra.Command{
 }
 
 var chatCmd = &cobra.Command{
-	Use:                   "chat",
-	Long:                  `Chat with me!`,
+	Use:                   "debug",
+	Long:                  `Let me debug your code.`,
 	Args:                  cobra.MinimumNArgs(0),
 	DisableFlagsInUseLine: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return chat.Handler(args)
+		return debug.Handler(args)
 	},
 }
 

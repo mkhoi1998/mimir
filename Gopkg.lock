@@ -39,14 +39,6 @@
   revision = "61d9dc4d719557facf8e9f7ac2e1e215d2167462"
 
 [[projects]]
-  digest = "1:114ecad51af93a73ae6781fd0d0bc28e52b433c852b84ab4b4c109c15e6c6b6d"
-  name = "github.com/jroimartin/gocui"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "c055c87ae801372cd74a0839b972db4f7697ae5f"
-  version = "v0.4.0"
-
-[[projects]]
   digest = "1:eb1bffab7260bf5ddc95fc2c41d4bfee1a4f5fe18194b3946fe8a9e9121a282f"
   name = "github.com/mattn/go-runewidth"
   packages = ["."]
@@ -61,14 +53,6 @@
   packages = ["stackongo"]
   pruneopts = "UT"
   revision = "67f606fd2d095464fd454f5cf1e59c55e4f4a0bd"
-
-[[projects]]
-  branch = "master"
-  digest = "1:f7fff9f0feaf7cc31981180fa02dc09fe11a4881b1b60f7e79b4c86a37389382"
-  name = "github.com/nsf/termbox-go"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "4d2b513ad8bee47a9a5a65b0dee0182049a31916"
 
 [[projects]]
   digest = "1:b8261a46d75566ebf5b4fb6bb762f54f47e6633e0995118393afc80bb1f428f5"
@@ -112,31 +96,6 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:76be532c9e0a02ab54fb2b01a9ca7971bb89f5739a50ecf5654b77abe60d8a64"
-  name = "github.com/wilcosheh/tfidf"
-  packages = [
-    ".",
-    "seg",
-    "util",
-  ]
-  pruneopts = "UT"
-  revision = "2847b6a5524e45e742dabb5eee12354729dff0d5"
-
-[[projects]]
-  digest = "1:e1e3f9055b9815694c65a6281351885e061dc03585ffd5879e9f5b029f46924d"
-  name = "github.com/yanyiwu/gojieba"
-  packages = [
-    ".",
-    "deps/cppjieba",
-    "deps/limonp",
-    "dict",
-  ]
-  pruneopts = "UT"
-  revision = "86e446422411bf948bd92f6a13f6858a30810adf"
-  version = "v1.1.2"
-
-[[projects]]
-  branch = "master"
   digest = "1:ca901dc31bf65bcdf4ceb1b9b83292ea7b71bf9e4e22a807093900c737e1d960"
   name = "golang.org/x/net"
   packages = [
@@ -153,11 +112,9 @@
     "github.com/DavidBelicza/TextRank",
     "github.com/agonopol/go-stem",
     "github.com/jaytaylor/html2text",
-    "github.com/jroimartin/gocui",
     "github.com/mkhoi1998/Stack-on-Go/stackongo",
     "github.com/sahilm/fuzzy",
     "github.com/spf13/cobra",
-    "github.com/wilcosheh/tfidf",
     "golang.org/x/net/html",
   ]
   solver-name = "gps-cdcl"

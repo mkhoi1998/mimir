@@ -8,8 +8,6 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
-
-	"github.com/mkhoi1998/mimir/utils"
 )
 
 // SearchGoogle return the first link from google search using queries
@@ -26,7 +24,7 @@ func SearchGoogle(query []string) string {
 		return ""
 	}
 	urlReg := regexp.MustCompile(`q=https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)`)
-	matches := urlReg.FindAllString(strings.ReplaceAll(utils.ExtractLongestBody(`\*\*+`, string(bodyBytes)), "~", "."), -1)
+	matches := urlReg.FindAllString(strings.ReplaceAll(extractLongestBody(`\*\*+`, string(bodyBytes)), "~", "."), -1)
 	for i := range matches {
 		if strings.Contains(matches[i], "https://www.google.com") {
 			continue
@@ -61,4 +59,19 @@ func GetContent(link string) string {
 	option := regexp.MustCompile(`<option.*>.*<\/option>`)
 	b = option.ReplaceAllString(b, "")
 	return b
+}
+
+func extractLongestBody(regex, content string) string {
+	header := regexp.MustCompile(regex)
+	ts := header.Split(content, -1)
+
+	var index int
+	var last int
+	for i := range ts {
+		if len(ts[i]) > last {
+			index = i
+			last = len(ts[i])
+		}
+	}
+	return ts[index]
 }

@@ -26,6 +26,7 @@ func ExtractSentences(text string, count int) []string {
 	r := regexp.MustCompile(`[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+|(\.\.+)|(\x60.*\x60)|(".*")|('.*')`)
 	rep := r.FindAllString(text, -1)
 	for i := range rep {
+		// whitelist some symbols
 		temp := strings.ReplaceAll(rep[i], "...", "~~~~~~~~~")
 		temp = strings.ReplaceAll(temp, "..", "~~~~~~~")
 		temp = strings.ReplaceAll(temp, "?", "~~~~~")

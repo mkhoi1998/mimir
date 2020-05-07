@@ -1,12 +1,16 @@
 package handler
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
+	"io"
 	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/jaytaylor/html2text"
+	"golang.org/x/net/html"
 
 	"github.com/mkhoi1998/mimir/consts"
 	"github.com/mkhoi1998/mimir/service/google"
@@ -14,7 +18,6 @@ import (
 	"github.com/mkhoi1998/mimir/service/stackoverflow"
 	"github.com/mkhoi1998/mimir/service/textrank"
 	"github.com/mkhoi1998/mimir/service/tfidf"
-	"github.com/mkhoi1998/mimir/utils"
 )
 
 // ExtractKeywords return the keywords from input question
@@ -57,13 +60,13 @@ func ExtractStackWiki(keywords []string) string {
 		return ""
 	}
 
-	h := similar.GetMostSimilar(header, utils.ExtractHeaders(wiki))
+	h := similar.GetMostSimilar(header, extractHeaders(wiki))
 	if h == "" {
 		return h
 	}
 
 	var body string
-	parts := utils.ExtractBody(wiki)
+	parts := extractBody(wiki)
 	for j := range parts {
 		if parts[j] == h {
 			body = parts[j+1]
@@ -97,7 +100,7 @@ func SummarizeGoogle(args []string) string {
 
 	// currently hard code for youtube
 	if strings.Contains(link, "youtube.com") {
-		return consts.ParseLink(link)
+		return link
 	}
 
 	content := google.GetContent(link)
@@ -109,7 +112,7 @@ func SummarizeGoogle(args []string) string {
 		res = summarizeContent(content)
 	}
 
-	res = fmt.Sprintf("%v%v", res, consts.ParseLink(link))
+	res = fmt.Sprintf("%v\n\n%v", res, consts.ParseLink(link))
 	return res
 }
 
@@ -129,7 +132,7 @@ func summarizeStackoverflowLink(link string) string {
 }
 
 func summarizeCodeContent(content, link string) string {
-	codes, err := utils.ExtractTag(content, "code")
+	codes, err := extractTag(content, "code")
 	if err == nil {
 		return extractCode(codes, content, link)
 	}
@@ -150,6 +153,42 @@ func summarizeCodeContent(content, link string) string {
 		return link
 	}
 	return res
+}
+
+func extractTag(content, tag string) ([]string, error) {
+	doc, err := html.Parse(strings.NewReader(content))
+	if err != nil {
+		return nil, err
+	}
+
+	var code []string
+	var crawler func(*html.Node)
+	crawler = func(node *html.Node) {
+		if node.Type == html.ElementNode && node.Data == tag {
+			for parent := node; parent != nil; parent = parent.Parent {
+				if parent.Data == "blockquote" {
+					return
+				}
+			}
+			code = append(code, html.UnescapeString(strings.TrimSpace(renderNode(node, tag))))
+			return
+		}
+		for child := node.FirstChild; child != nil; child = child.NextSibling {
+			crawler(child)
+		}
+	}
+	crawler(doc)
+	if code != nil {
+		return code, nil
+	}
+	return nil, errors.New("Missing tag in the node tree")
+}
+
+func renderNode(n *html.Node, tag string) string {
+	var buf bytes.Buffer
+	w := io.Writer(&buf)
+	html.Render(w, n)
+	return strings.ReplaceAll(strings.ReplaceAll(buf.String(), fmt.Sprintf("<%v>", tag), ""), fmt.Sprintf("</%v>", tag), "")
 }
 
 func extractCode(codes []string, content string, link string) string {
@@ -213,7 +252,7 @@ func extractCode(codes []string, content string, link string) string {
 	}
 
 	if isSt {
-		return fmt.Sprintf("%v%v", strings.Join(res, "\n\n"), consts.ParseLink(link))
+		return fmt.Sprintf("%v\n\n%v", strings.Join(res, "\n\n"), consts.ParseLink(link))
 	}
 
 	return strings.Join(res, "\n\n")
@@ -224,7 +263,7 @@ func summarizeContent(content string) string {
 	if err != nil {
 		return ""
 	}
-	ct := utils.ExtractBody(content)
+	ct := extractBody(content)
 
 	var cts []string
 	dup := map[string]bool{}
@@ -254,12 +293,12 @@ func summarizeContent(content string) string {
 		}
 		if isContent {
 			if !dup[ct[i]] {
-				cts = append(cts, link.ReplaceAllString(utils.RemoveAllTag(ct[i]), ""))
+				cts = append(cts, link.ReplaceAllString(removeAllTag(ct[i]), ""))
 				dup[ct[i]] = true
 			}
 			if i < len(ct)-2 {
 				if !dup[ct[i+1]] {
-					cts = append(cts, link.ReplaceAllString(utils.RemoveAllTag(ct[i+1]), ""))
+					cts = append(cts, link.ReplaceAllString(removeAllTag(ct[i+1]), ""))
 					dup[ct[i+1]] = true
 				}
 			}
@@ -303,38 +342,26 @@ func summarizeContent(content string) string {
 		return ""
 	}
 
-	return utils.TrimSpace(res)
+	h := regexp.MustCompile(`(\n[\t ]*)(\n[\t ]*)(\n[\t ]*)+`)
+	return h.ReplaceAllString(res, "\n\n")
 }
 
-// GetStackWiki return the body of the stack wiki
-func GetStackWiki(keyword string) []string {
-	tag, isTag := stackoverflow.CheckTagFromKeyword(keyword)
-	if !isTag {
-		return nil
+func extractHeaders(content string) []string {
+	headers := regexp.MustCompile(`(\*\*+|--+\n)?(.*)(\n(\*\*+|--+))`)
+	s := headers.FindAllStringSubmatch(content, -1)
+	var res []string
+	for i := range s {
+		res = append(res, s[i][2])
 	}
-
-	wiki, err := html2text.FromString(stackoverflow.GetWikiFromTag(tag))
-	if err != nil {
-		return nil
-	}
-
-	return utils.ExtractBody(wiki)
+	return res
 }
 
-// GetStackoverflow return the full contents of the answer from Stackoverflow
-func GetStackoverflow(keywords []string) []string {
-	ans, link := stackoverflow.GetAnswerFromSearch(keywords)
-	if ans == "" {
-		return nil
-	}
+func extractBody(content string) []string {
+	header := regexp.MustCompile(`((\n\n+)|(\n(\*\*+|--+)\n)|((\*\*+|--+)\n))`)
+	return header.Split(content, -1)
+}
 
-	res, err := html2text.FromString(ans)
-	if err != nil {
-		return nil
-	}
-
-	// remove quote symbols for clearer display
-	res = strings.TrimSpace(strings.ReplaceAll(res, "\n>", ""))
-
-	return append(strings.Split(res, "\n\n"), consts.ParseLink(link))
+func removeAllTag(content string) string {
+	h := regexp.MustCompile(`<.*>`)
+	return h.ReplaceAllString(content, "")
 }

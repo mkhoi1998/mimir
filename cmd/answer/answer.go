@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/mkhoi1998/mimir/cmd/handler"
-	"github.com/mkhoi1998/mimir/errorer"
+	"github.com/mkhoi1998/mimir/consts"
 )
 
 // Handler response input question based on keywords and online resources (Stackoverflow and Google)
@@ -19,7 +19,7 @@ func responseAnswer(args []string) string {
 	var res string
 	switch len(keywords) {
 	case 0:
-		return errorer.ErrEmptyQuestion.Error()
+		return consts.Greet()
 	case 1:
 		res = handler.SummarizeStackWiki(keywords[0])
 	case 2:
@@ -32,7 +32,7 @@ func responseAnswer(args []string) string {
 		res = handler.SummarizeGoogle(args)
 	}
 	if res == "" {
-		res = errorer.ErrInternal.Error()
+		res = consts.Error()
 	}
 	return res
 }
