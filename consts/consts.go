@@ -178,7 +178,7 @@ func DebugGreet() string {
 		d := []string{time.Now().Weekday().String(), p}
 		r = fmt.Sprintf("%v%v. ", r, d[rand.Intn(len(d))])
 	}
-	e := []string{":)", "=)", ":)))))", "=))))))", "", "", "", "", "", ""}
+	e := []string{" :)", " =)", " :)))))", " =))))))", "", "", "", "", "", ""}
 	return fmt.Sprintf("%v%v%v", r, Greetings[rand.Intn(len(Greetings))], e[rand.Intn(len(e))])
 }
 
@@ -191,12 +191,12 @@ func DebugChat() string {
 // Bye return lines from Byes randomly
 func Bye() string {
 	rand.Seed(time.Now().Unix())
-	e := []string{":)", "=)", ":)))))", "=))))))", "", "", "", "", "", ""}
+	e := []string{" :)", " =)", " :)))))", " =))))))", "", "", "", "", "", ""}
 	return fmt.Sprintf("%v%v", Byes[rand.Intn(len(Byes))], e[rand.Intn(len(e))])
 }
 
 // ParseLink return link with lines from Helps randomly
 func ParseLink(link string) string {
 	rand.Seed(time.Now().Unix())
-	return fmt.Sprintf("%v\n%v", link, Helps[rand.Intn(len(Helps))])
+	return fmt.Sprintf("%v\n\033[0;36m%v\033[0m", link, Helps[rand.Intn(len(Helps))])
 }
