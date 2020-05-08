@@ -1,30 +1,37 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 
-	"github.com/mkhoi1998/devsup/utils"
+	"github.com/mkhoi1998/mimir/cmd/answer"
+	"github.com/mkhoi1998/mimir/cmd/debug"
 )
 
 var rootCmd = &cobra.Command{
-	Use:  "devups",
-	Long: `A command-line assistant for developers`,
-	Run:  handleRootCmd,
+	Use:                   "mimir",
+	Long:                  `A command-line assistant for developers`,
+	Args:                  cobra.MinimumNArgs(0),
+	DisableFlagsInUseLine: true,
+	Run: func(cmd *cobra.Command, args []string) {
+		answer.Handler(args)
+	},
+}
+
+var chatCmd = &cobra.Command{
+	Use:                   "debug",
+	Long:                  `Let me debug your code.`,
+	Args:                  cobra.MinimumNArgs(0),
+	DisableFlagsInUseLine: true,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return debug.Handler(args)
+	},
 }
 
 func init() {
+	rootCmd.AddCommand(chatCmd)
 }
 
-func handleRootCmd(cmd *cobra.Command, args []string) {
-	fmt.Println(utils.DefaultHelpCmd(cmd))
-}
-
+// Execute the commands
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	rootCmd.Execute()
 }
