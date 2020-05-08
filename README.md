@@ -9,10 +9,12 @@ An advisor for your development process.
 ## Usage
 
 - Advisor Mimir
+
 ![advise](media/advise.gif)
 
 - Ruber duck debugging (or Mimir debugging)
-![debug](media/debug.png)
+
+![debug](media/debug.png =600x410)
 
 ## Install
 
