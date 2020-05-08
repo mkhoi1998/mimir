@@ -7,7 +7,7 @@ help:
 	@echo "make build-linux"
 	@echo "       build devsup tool for linux"
 	@echo "make dep"
-	@echo "       run to clean source build"
+	@echo "       run to clean vendor"
 	@echo "make clean"
 	@echo "       run to clean source build"
 
