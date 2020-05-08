@@ -16,7 +16,18 @@ An advisor for your development process.
 
 ## Install
 
+### macOS
 ```
 $ brew tap mkhoi1998/mimir
 $ brew install mimir
+```
+### ubuntu/ debian
+Download the binary package for ubuntu
+```
+$ wget https://github.com/mkhoi1998/mimir/releases/download/v1.0.0/mimir-linux-amd64-1.0.0.tar.gz
+```
+Extract and install the binary package
+```
+$ tar xf mimir-linux-amd64-1.0.0.tar.gz
+$ sudo cp mimir /usr/local/bin
 ```
