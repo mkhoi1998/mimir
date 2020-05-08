@@ -3,6 +3,7 @@ package debug
 import (
 	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
 	"strings"
 	"time"
@@ -42,7 +43,12 @@ func runCommand(commandStr string) error {
 		os.Exit(0)
 	case ":h":
 		fmt.Println(consts.DebugHelp)
-		return nil
+	default:
+		rand.Seed(time.Now().Unix())
+		r := rand.Intn(10)
+		if r == 1 {
+			fmt.Println(consts.DebugChat())
+		}
 	}
 	return nil
 }
