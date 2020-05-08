@@ -93,6 +93,7 @@ var (
 		"Can you tell me your code, brother?",
 		"Fact is, there's only one person alive who can get you where you need to go... and luckily for you, my schedule's wide open.",
 		"All right, wish me luck!",
+		"Explain your code, please.",
 	}
 
 	// DebugMid store lines for mid-conversation in debug mode
